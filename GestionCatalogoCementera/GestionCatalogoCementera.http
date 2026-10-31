@@ -1,0 +1,6 @@
+@GestionCatalogoCementera_HostAddress = http://localhost:5017
+
+GET {{GestionCatalogoCementera_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
