@@ -3,240 +3,358 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Catálogo e Inventario - Cementera</title>
+    <title>Planta Cementera - Control de Catálogo e Inventario</title>
     <style>
         :root {
-            --bg-main: #f1f5f9;
-            --bg-card: #ffffff;
-            --navy: #1e293b;
-            --slate: #64748b;
-            --border: #cbd5e1;
-            --green: #16a34a;
-            --blue: #2563eb;
-            --red: #dc2626;
-            --amber-bg: #fef3c7;
-            --amber-txt: #b45309;
+            --concrete-bg: #e5e7eb;
+            --concrete-light: #f3f4f6;
+            --card-bg: #ffffff;
+            --charcoal: #18181b;
+            --steel-dark: #27272a;
+            --steel-mid: #52525b;
+            --steel-border: #d4d4d8;
+            --safety-amber: #f59e0b;
+            --safety-amber-dark: #d97706;
+            --industrial-green: #15803d;
+            --industrial-blue: #1d4ed8;
+            --industrial-red: #b91c1c;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--navy);
+            background-color: var(--concrete-bg);
+            background-image: radial-gradient(#cbd5e1 0.75px, transparent 0.75px);
+            background-size: 16px 16px;
+            color: var(--charcoal);
             min-height: 100vh;
         }
 
+        /* Encabezado Industrial de Planta Cementera */
         header {
-            background-color: var(--navy);
-            color: white;
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--steel-dark) 100%);
+            color: #ffffff;
             padding: 18px 32px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            border-bottom: 5px solid var(--safety-amber);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
-            header h1 {
-                font-size: 1.35rem;
-                letter-spacing: 0.5px;
-            }
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
 
-            header p {
-                font-size: 0.9rem;
-                color: #cbd5e1;
-                margin-top: 4px;
-            }
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+            background-color: var(--safety-amber);
+            color: var(--charcoal);
+            font-weight: 900;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            border: 2px solid #ffffff;
+            letter-spacing: -1px;
+        }
 
+        header h1 {
+            font-size: 1.35rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        header p {
+            font-size: 0.86rem;
+            color: #d4d4d8;
+            margin-top: 2px;
+        }
+
+        .plant-badge {
+            background-color: rgba(245, 158, 11, 0.15);
+            border: 1px solid var(--safety-amber);
+            color: #fde68a;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        /* Contenedor de 2 paneles */
         .container {
-            max-width: 1200px;
-            margin: 24px auto;
+            max-width: 1240px;
+            margin: 26px auto;
             padding: 0 20px;
             display: grid;
-            grid-template-columns: 360px 1fr;
+            grid-template-columns: 380px 1fr;
             gap: 24px;
         }
 
+        /* Tarjetas tipo módulo de almacén */
         .card {
-            background: var(--bg-card);
-            border-radius: 10px;
+            background: var(--card-bg);
+            border-radius: 6px;
             padding: 22px;
-            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
-            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(24, 24, 27, 0.1);
+            border: 1px solid var(--steel-border);
+            border-top: 4px solid var(--steel-dark);
         }
 
-            .card h2 {
-                font-size: 1.05rem;
-                margin-bottom: 16px;
-                padding-bottom: 10px;
-                border-bottom: 2px solid #f1f5f9;
-                color: var(--navy);
-            }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--concrete-light);
+        }
 
+        .card h2 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--charcoal);
+            font-weight: 800;
+        }
+
+        .tag-modulo {
+            background-color: var(--concrete-light);
+            color: var(--steel-mid);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--steel-border);
+            text-transform: uppercase;
+        }
+
+        /* TAREA 3 y TAREA 13 (Osias): Formulario de Registro y Edición */
         .form-group {
-            margin-bottom: 14px;
+            margin-bottom: 15px;
         }
 
             .form-group label {
                 display: block;
-                font-size: 0.88rem;
-                font-weight: 600;
+                font-size: 0.82rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.4px;
+                color: var(--steel-dark);
                 margin-bottom: 6px;
             }
 
             .form-group input {
                 width: 100%;
-                padding: 9px 12px;
-                border: 1px solid var(--border);
-                border-radius: 6px;
+                padding: 10px 12px;
+                border: 1.5px solid var(--steel-border);
+                border-radius: 4px;
                 font-size: 0.95rem;
+                background-color: #fafafa;
+                color: var(--charcoal);
+                transition: border-color 0.2s, background-color 0.2s;
             }
 
                 .form-group input:focus {
                     outline: none;
-                    border-color: var(--blue);
+                    border-color: var(--safety-amber-dark);
+                    background-color: #ffffff;
                 }
 
                 .form-group input[readonly] {
-                    background-color: #f1f5f9;
-                    color: var(--slate);
+                    background-color: var(--concrete-light);
+                    color: var(--steel-mid);
+                    border-style: dashed;
                     cursor: not-allowed;
+                    font-weight: 600;
                 }
 
+        /* Alertas para validaciones y mensajes (Tareas 4 y 5 de Anderson) */
         .alert {
             display: none;
             padding: 10px 12px;
-            border-radius: 6px;
-            font-size: 0.88rem;
-            font-weight: 600;
+            border-radius: 4px;
+            font-size: 0.86rem;
+            font-weight: 700;
             margin-bottom: 14px;
         }
 
             .alert.error {
                 display: block;
-                background-color: #fee2e2;
+                background-color: #fef2f2;
                 color: #991b1b;
-                border: 1px solid #f87171;
+                border-left: 4px solid var(--industrial-red);
             }
 
             .alert.success {
                 display: block;
-                background-color: #dcfce7;
+                background-color: #f0fdf4;
                 color: #166534;
-                border: 1px solid #4ade80;
+                border-left: 4px solid var(--industrial-green);
             }
 
+        /* Botonera Industrial CRUD */
         .btn-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-top: 18px;
+            margin-top: 20px;
         }
 
         button {
-            padding: 10px 14px;
+            padding: 11px 14px;
             border: none;
-            border-radius: 6px;
-            font-size: 0.92rem;
-            font-weight: 700;
-            color: white;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #ffffff;
             cursor: pointer;
+            transition: filter 0.15s, transform 0.1s;
         }
 
             button:hover {
-                opacity: 0.92;
+                filter: brightness(1.08);
+            }
+
+            button:active {
+                transform: translateY(1px);
             }
 
         .btn-guardar {
-            background-color: var(--green);
+            background-color: var(--industrial-green);
+            border-bottom: 3px solid #14532d;
         }
 
         .btn-actualizar {
-            background-color: var(--blue);
+            background-color: var(--safety-amber-dark);
+            border-bottom: 3px solid #92400e;
         }
 
         .btn-eliminar {
-            background-color: var(--red);
+            background-color: var(--industrial-red);
+            border-bottom: 3px solid #7f1d1d;
         }
 
         .btn-limpiar {
-            background-color: var(--slate);
+            background-color: var(--steel-mid);
+            border-bottom: 3px solid var(--steel-dark);
         }
 
+        /* TAREA 8 (Osias): Tabla de Inventario de Materiales Cementeros */
         .table-wrapper {
             overflow-x: auto;
+            border: 1px solid var(--steel-border);
+            border-radius: 4px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.94rem;
+            font-size: 0.92rem;
         }
 
         thead {
-            background-color: #f8fafc;
-            border-bottom: 2px solid var(--border);
+            background-color: var(--steel-dark);
+            color: #ffffff;
+            border-bottom: 3px solid var(--safety-amber);
         }
 
-        th, td {
+        th {
             text-align: left;
             padding: 12px 14px;
-            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        td {
+            text-align: left;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--concrete-bg);
         }
 
         tbody tr {
             cursor: pointer;
+            transition: background-color 0.12s;
         }
 
+            tbody tr:nth-child(even) {
+                background-color: #f8fafc;
+            }
+
             tbody tr:hover {
-                background-color: #f1f5f9;
+                background-color: #fef3c7;
             }
 
             tbody tr.selected {
-                background-color: #dbeafe;
-                font-weight: 600;
+                background-color: #fde68a;
+                font-weight: 700;
             }
 
+        /* Mensaje cuando el almacén no tiene productos registrados */
         .empty-msg {
             margin-top: 14px;
-            padding: 12px;
-            background-color: var(--amber-bg);
-            color: var(--amber-txt);
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            padding: 14px;
+            background-color: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+            border-left: 5px solid var(--safety-amber);
+            border-radius: 4px;
+            font-size: 0.88rem;
+            font-weight: 700;
             text-align: center;
         }
 
+        /* TAREA 18 (Osias): Modal de Confirmación de Eliminación con Cinta de Seguridad */
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.55);
+            background: rgba(24, 24, 27, 0.72);
             align-items: center;
             justify-content: center;
             z-index: 1000;
         }
 
         .modal {
-            background: white;
+            background: #ffffff;
             padding: 24px;
-            border-radius: 10px;
+            border-radius: 6px;
             width: 90%;
-            max-width: 420px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-width: 430px;
+            border-top: 6px solid var(--industrial-red);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
         }
 
             .modal h3 {
                 margin-bottom: 10px;
-                color: var(--navy);
+                color: var(--industrial-red);
+                text-transform: uppercase;
+                font-size: 1.02rem;
+                letter-spacing: 0.5px;
             }
 
             .modal p {
-                font-size: 0.95rem;
-                color: #334155;
-                margin-bottom: 20px;
+                font-size: 0.94rem;
+                color: var(--steel-dark);
+                margin-bottom: 22px;
+                line-height: 1.45;
             }
 
         .modal-actions {
@@ -245,7 +363,7 @@
             gap: 10px;
         }
 
-        @media (max-width: 860px) {
+        @media (max-width: 880px) {
             .container {
                 grid-template-columns: 1fr;
             }
@@ -255,48 +373,63 @@
 <body>
 
     <header>
-        <h1>GESTIÓN DE CATÁLOGO E INVENTARIO - CEMENTERA</h1>
-        <p>Sprint 1: CRUD de Productos conectado a SQL Server (Registrar, Consultar, Actualizar y Eliminar)</p>
+        <div class="brand-box">
+            <div class="brand-icon">GC</div>
+            <div>
+                <h1>CEMENTERA NACIONAL — CONTROL DE INVENTARIO</h1>
+                <p>Sistema de Gestión de Catálogo de Almacén (Cemento, Agregados y Derivados)</p>
+            </div>
+        </div>
+        <div class="plant-badge">Módulo Almacén · Sprint 1</div>
     </header>
 
     <main class="container">
+        <!-- TAREA 3 y TAREA 13 (Osias): Diseño de Formulario de Registro y Edición -->
         <section class="card">
-            <h2>Datos del Producto (Registro / Edición)</h2>
+            <div class="card-header">
+                <h2>Ficha de Material / Producto</h2>
+                <span class="tag-modulo">Registro y Edición</span>
+            </div>
 
+            <!-- Contenedor de alertas listo para las validaciones de Anderson (Tareas 4 y 5) -->
             <div id="alertaMensaje" class="alert"></div>
 
             <form id="formProducto" onsubmit="return false;">
                 <div class="form-group">
-                    <label for="txtId">ID Producto (Automático):</label>
-                    <input type="text" id="txtId" readonly placeholder="Se asigna al guardar / seleccionar">
+                    <label for="txtId">Código / ID de Almacén:</label>
+                    <input type="text" id="txtId" readonly placeholder="Asignación automática">
                 </div>
 
                 <div class="form-group">
-                    <label for="txtNombre">Nombre del Producto *:</label>
-                    <input type="text" id="txtNombre" placeholder="Ej. Saco Cemento Gris 42.5kg">
+                    <label for="txtNombre">Descripción del Producto Cementero *:</label>
+                    <input type="text" id="txtNombre" placeholder="Ej. Cemento Gris Uso General 42.5kg">
                 </div>
 
                 <div class="form-group">
-                    <label for="txtPrecio">Precio Unitario (RD$) *:</label>
+                    <label for="txtPrecio">Precio por Unidad / Funda (RD$) *:</label>
                     <input type="text" id="txtPrecio" placeholder="Ej. 550.00">
                 </div>
 
                 <div class="form-group">
-                    <label for="txtStock">Stock / Existencia Actual *:</label>
-                    <input type="text" id="txtStock" placeholder="Ej. 120">
+                    <label for="txtStock">Stock Físico en Almacén (Unidades) *:</label>
+                    <input type="text" id="txtStock" placeholder="Ej. 250">
                 </div>
 
                 <div class="btn-grid">
-                    <button type="button" id="btnGuardar" class="btn-guardar" onclick="guardarProducto()">Guardar</button>
-                    <button type="button" id="btnActualizar" class="btn-actualizar" onclick="actualizarProducto()">Actualizar</button>
-                    <button type="button" id="btnEliminar" class="btn-eliminar" onclick="solicitarEliminarProducto()">Eliminar</button>
-                    <button type="button" id="btnLimpiar" class="btn-limpiar" onclick="limpiarFormulario()">Limpiar</button>
+                    <button type="button" id="btnGuardar" class="btn-guardar">Guardar</button>
+                    <button type="button" id="btnActualizar" class="btn-actualizar">Actualizar</button>
+                    <button type="button" id="btnEliminar" class="btn-eliminar">Eliminar</button>
+                    <button type="button" id="btnLimpiar" class="btn-limpiar">Limpiar</button>
                 </div>
             </form>
         </section>
 
+        <!-- TAREA 8 (Osias): Diseño de Pantalla de Listado de Productos -->
         <section class="card">
-            <h2>Catálogo de Productos Registrados (Clic en una fila para Editar / Eliminar)</h2>
+            <div class="card-header">
+                <h2>Existencias Registradas en Planta</h2>
+                <span class="tag-modulo">Catálogo en Tiempo Real</span>
+            </div>
 
             <div class="table-wrapper">
                 <table id="tablaProductos">
@@ -304,227 +437,41 @@
                         <tr>
                             <th>ID</th>
                             <th>Nombre del Producto</th>
-                            <th>Precio (RD$)</th>
-                            <th>Stock</th>
+                            <th>Precio Unitario (RD$)</th>
+                            <th>Stock Disponible</th>
                         </tr>
                     </thead>
-                    <tbody id="tbodyProductos"></tbody>
+                    <tbody id="tbodyProductos">
+                        <!-- Anderson programa aquí la carga de sp_LeerProducto (Tareas 9 y 10) -->
+                    </tbody>
                 </table>
             </div>
 
+            <!-- Mensaje de catálogo vacío (Criterio 3 de HU-2) -->
             <div id="lblSinRegistros" class="empty-msg">
-                No existen productos registrados actualmente en el catálogo.
+                No existen productos registrados actualmente en el catálogo del almacén.
             </div>
         </section>
     </main>
 
+    <!-- TAREA 18 (Osias): Diseño del Mensaje de Confirmación de Eliminación -->
     <div id="modalConfirmacion" class="modal-overlay">
         <div class="modal">
-            <h3>Confirmar eliminación</h3>
-            <p id="textoConfirmacion">¿Está seguro de que desea eliminar este producto del catálogo?</p>
+            <h3>Confirmar Baja de Producto</h3>
+            <p id="textoConfirmacion">¿Está seguro de que desea eliminar este material del catálogo del almacén cementero?</p>
             <div class="modal-actions">
-                <button type="button" class="btn-limpiar" onclick="cerrarModalEliminar()">Cancelar</button>
-                <button type="button" class="btn-eliminar" onclick="confirmarEliminarProducto()">Sí, Eliminar</button>
+                <button type="button" id="btnCancelarEliminar" class="btn-limpiar">Cancelar</button>
+                <button type="button" id="btnConfirmarEliminar" class="btn-eliminar">Sí, Eliminar</button>
             </div>
         </div>
     </div>
 
+    <!-- Espacio reservado para las tareas de programación de Anderson (Tareas 4, 5, 9, 10, 14, 15 y 19) -->
     <script>
-        const API_URL = '/api/productos';
-        let productosCat = [];
-        let siguienteId = 1;
-
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarProductos();
-        });
-
-        function mostrarMensaje(texto, tipo) {
-            const alerta = document.getElementById('alertaMensaje');
-            alerta.textContent = texto;
-            alerta.className = 'alert ' + tipo;
-        }
-
-        function validarFormulario() {
-            const nombre = document.getElementById('txtNombre').value.trim();
-            const precioStr = document.getElementById('txtPrecio').value.trim();
-            const stockStr = document.getElementById('txtStock').value.trim();
-
-            if (!nombre) {
-                mostrarMensaje("Error: El campo 'Nombre' es obligatorio.", 'error');
-                document.getElementById('txtNombre').focus();
-                return null;
-            }
-
-            const precio = Number(precioStr);
-            if (precioStr === '' || isNaN(precio) || precio < 0) {
-                mostrarMensaje("Error: El campo 'Precio' debe ser numérico y no puede ser negativo.", 'error');
-                document.getElementById('txtPrecio').focus();
-                return null;
-            }
-
-            const stock = Number(stockStr);
-            if (stockStr === '' || !Number.isInteger(stock) || stock < 0) {
-                mostrarMensaje("Error: El campo 'Stock' debe ser un número entero válido y no negativo.", 'error');
-                document.getElementById('txtStock').focus();
-                return null;
-            }
-
-            return { nombre, precio, stock };
-        }
-
-        async function cargarProductos() {
-            try {
-                const resp = await fetch(API_URL);
-                if (resp.ok) {
-                    productosCat = await resp.json();
-                }
-            } catch (err) { }
-            renderizarTabla();
-        }
-
-        function renderizarTabla() {
-            const tbody = document.getElementById('tbodyProductos');
-            const lblVacio = document.getElementById('lblSinRegistros');
-            const idSeleccionado = document.getElementById('txtId').value;
-
-            tbody.innerHTML = '';
-
-            if (productosCat.length === 0) {
-                lblVacio.style.display = 'block';
-                return;
-            }
-
-            lblVacio.style.display = 'none';
-
-            productosCat.forEach(prod => {
-                const tr = document.createElement('tr');
-                if (String(prod.id) === String(idSeleccionado)) {
-                    tr.classList.add('selected');
-                }
-                tr.innerHTML = `
-                    <td>${prod.id}</td>
-                    <td>${prod.nombre}</td>
-                    <td>RD$ ${Number(prod.precio).toFixed(2)}</td>
-                    <td>${prod.stock}</td>
-                `;
-                tr.onclick = () => seleccionarProducto(prod);
-                tbody.appendChild(tr);
-            });
-        }
-
-        function seleccionarProducto(prod) {
-            document.getElementById('txtId').value = prod.id;
-            document.getElementById('txtNombre').value = prod.nombre;
-            document.getElementById('txtPrecio').value = prod.precio;
-            document.getElementById('txtStock').value = prod.stock;
-            document.getElementById('alertaMensaje').className = 'alert';
-            renderizarTabla();
-        }
-
-        async function guardarProducto() {
-            const datos = validarFormulario();
-            if (!datos) return;
-
-            try {
-                const resp = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datos)
-                });
-                if (resp.ok) {
-                    await cargarProductos();
-                } else {
-                    throw new Error('Modo diseño local');
-                }
-            } catch {
-                productosCat.push({ id: siguienteId++, ...datos });
-                renderizarTabla();
-            }
-
-            limpiarFormulario();
-            mostrarMensaje('Producto creado exitosamente con sp_CrearProducto.', 'success');
-        }
-
-        async function actualizarProducto() {
-            const id = document.getElementById('txtId').value.trim();
-            if (!id) {
-                mostrarMensaje('Aviso: Debe seleccionar un producto de la tabla primero para actualizarlo.', 'error');
-                return;
-            }
-
-            const datos = validarFormulario();
-            if (!datos) return;
-
-            try {
-                const resp = await fetch(`${API_URL}/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: Number(id), ...datos })
-                });
-                if (resp.ok) {
-                    await cargarProductos();
-                } else {
-                    throw new Error('Modo diseño local');
-                }
-            } catch {
-                const index = productosCat.findIndex(p => String(p.id) === String(id));
-                if (index !== -1) {
-                    productosCat[index] = { id: Number(id), ...datos };
-                }
-                renderizarTabla();
-            }
-
-            limpiarFormulario();
-            mostrarMensaje('Producto actualizado exitosamente con sp_ActualizarProducto.', 'success');
-        }
-
-        function solicitarEliminarProducto() {
-            const id = document.getElementById('txtId').value.trim();
-            const nombre = document.getElementById('txtNombre').value.trim();
-
-            if (!id) {
-                mostrarMensaje('Aviso: Debe seleccionar un producto de la tabla primero para eliminarlo.', 'error');
-                return;
-            }
-
-            document.getElementById('textoConfirmacion').textContent =
-                `¿Está seguro de que desea eliminar el producto "${nombre}" (ID: ${id}) del catálogo?`;
-            document.getElementById('modalConfirmacion').style.display = 'flex';
-        }
-
-        function cerrarModalEliminar() {
-            document.getElementById('modalConfirmacion').style.display = 'none';
-        }
-
-        async function confirmarEliminarProducto() {
-            const id = document.getElementById('txtId').value.trim();
-            cerrarModalEliminar();
-
-            try {
-                const resp = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-                if (resp.ok) {
-                    await cargarProductos();
-                } else {
-                    throw new Error('Modo diseño local');
-                }
-            } catch {
-                productosCat = productosCat.filter(p => String(p.id) !== String(id));
-                renderizarTabla();
-            }
-
-            limpiarFormulario();
-            mostrarMensaje('Producto eliminado del catálogo con sp_EliminarProducto.', 'success');
-        }
-
-        function limpiarFormulario() {
-            document.getElementById('txtId').value = '';
-            document.getElementById('txtNombre').value = '';
-            document.getElementById('txtPrecio').value = '';
-            document.getElementById('txtStock').value = '';
-            document.getElementById('alertaMensaje').className = 'alert';
-            renderizarTabla();
-            document.getElementById('txtNombre').focus();
-        }
+                // TODO (Anderson - Tareas 4 y 5): Programar validaciones, botón Guardar (#btnGuardar), mensaje de éxito y limpieza.
+                // TODO (Anderson - Tareas 9 y 10): Programar carga inicial del listado (#tbodyProductos), refresco automático y #lblSinRegistros.
+                // TODO (Anderson - Tareas 14 y 15): Programar selección de fila en la tabla, botón Actualizar (#btnActualizar) y reutilizar validaciones.
+                // TODO (Anderson - Tarea 19): Programar botón Eliminar (#btnEliminar) mostrando y cerrando #modalConfirmacion.
     </script>
 </body>
 </html>
