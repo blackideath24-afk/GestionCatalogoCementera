@@ -401,7 +401,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="txtNombre">Descripción del Producto Cementero *:</label>
+                    <label for="txtNombre">Nombre del Producto *:</label>
                     <input type="text" id="txtNombre" placeholder="Ej. Cemento Gris Uso General 42.5kg">
                 </div>
 
@@ -467,11 +467,209 @@
     </div>
 
     <!-- Espacio reservado para las tareas de programación de Anderson (Tareas 4, 5, 9, 10, 14, 15 y 19) -->
-    <script>
-                // TODO (Anderson - Tareas 4 y 5): Programar validaciones, botón Guardar (#btnGuardar), mensaje de éxito y limpieza.
-                // TODO (Anderson - Tareas 9 y 10): Programar carga inicial del listado (#tbodyProductos), refresco automático y #lblSinRegistros.
-                // TODO (Anderson - Tareas 14 y 15): Programar selección de fila en la tabla, botón Actualizar (#btnActualizar) y reutilizar validaciones.
-                // TODO (Anderson - Tarea 19): Programar botón Eliminar (#btnEliminar) mostrando y cerrando #modalConfirmacion.
-    </script>
+	<script>
+		const tbody = document.getElementById("tbodyProductos");
+		const lblSinRegistros = document.getElementById("lblSinRegistros");
+		const alerta = document.getElementById("alertaMensaje");
+		const txtId = document.getElementById("txtId");
+		const txtNombre = document.getElementById("txtNombre");
+		const txtPrecio = document.getElementById("txtPrecio");
+		const txtStock = document.getElementById("txtStock");
+		const modal = document.getElementById("modalConfirmacion");
+		const textoConfirmacion = document.getElementById("textoConfirmacion");
+		const btnConfirmarEliminar = document.getElementById("btnConfirmarEliminar");
+
+		function mostrarMensaje(texto, tipo) {
+		alerta.className = "alert " + tipo;
+		alerta.textContent = texto;
+		}
+
+		function ocultarMensaje() {
+		alerta.className = "alert";
+		alerta.textContent = "";
+		}
+
+		function seleccionarFila(fila, p) {
+		tbody.querySelectorAll("tr.selected").forEach(f => f.classList.remove("selected"));
+		fila.classList.add("selected");
+		txtId.value = p.id;
+		txtNombre.value = p.nombre;
+		txtPrecio.value = p.precio.toFixed(2);
+		txtStock.value = p.stock;
+		ocultarMensaje();
+		}
+
+		async function cargarProductos() {
+		try {
+		const respuesta = await fetch("/api/productos");
+		if (!respuesta.ok) throw new Error(await respuesta.text());
+
+		const productos = await respuesta.json();
+		tbody.innerHTML = "";
+
+		if (productos.length === 0) {
+		lblSinRegistros.style.display = "block";
+		return;
+		}
+
+		lblSinRegistros.style.display = "none";
+
+		productos.forEach(p => {
+		const fila = document.createElement("tr");
+		[p.id, p.nombre, p.precio.toFixed(2), p.stock].forEach(valor => {
+		const celda = document.createElement("td");
+		celda.textContent = valor;
+		fila.appendChild(celda);
+		});
+		fila.addEventListener("click", () => seleccionarFila(fila, p));
+		tbody.appendChild(fila);
+		});
+		} catch (error) {
+		mostrarMensaje("No se pudo cargar el catálogo: " + error.message, "error");
+		}
+		}
+
+		function validarFormulario() {
+		const nombre = txtNombre.value.trim();
+		const precio = txtPrecio.value.trim();
+		const stock = txtStock.value.trim();
+
+		if (nombre === "") {
+		mostrarMensaje("El nombre del producto es obligatorio.", "error");
+		txtNombre.focus();
+		return null;
+		}
+		if (precio === "") {
+		mostrarMensaje("El precio es obligatorio.", "error");
+		txtPrecio.focus();
+		return null;
+		}
+		if (!/^\d+(\.\d{1,2})?$/.test(precio)) {
+		mostrarMensaje("El precio debe ser un número positivo, con punto y hasta 2 decimales (ej. 550.00).", "error");
+		txtPrecio.focus();
+		return null;
+		}
+		if (stock === "") {
+		mostrarMensaje("El stock es obligatorio.", "error");
+		txtStock.focus();
+		return null;
+		}
+		if (!/^\d+$/.test(stock)) {
+		mostrarMensaje("El stock debe ser un número entero positivo, sin decimales (ej. 250).", "error");
+		txtStock.focus();
+		return null;
+		}
+
+		return { nombre: nombre, precio: parseFloat(precio), stock: parseInt(stock, 10) };
+		}
+
+		function limpiarFormulario() {
+		txtId.value = "";
+		txtNombre.value = "";
+		txtPrecio.value = "";
+		txtStock.value = "";
+		tbody.querySelectorAll("tr.selected").forEach(f => f.classList.remove("selected"));
+		txtNombre.focus();
+		}
+
+		function cerrarModal() {
+		modal.style.display = "none";
+		}
+
+		document.getElementById("btnGuardar").addEventListener("click", async () => {
+		if (txtId.value !== "") {
+		mostrarMensaje("Estás editando un producto. Usa Actualizar, o presiona Limpiar para registrar uno nuevo.", "error");
+		return;
+		}
+
+		const producto = validarFormulario();
+		if (!producto) return;
+
+		try {
+		const respuesta = await fetch("/api/productos", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(producto)
+		});
+		if (!respuesta.ok) throw new Error(await respuesta.text());
+
+		limpiarFormulario();
+		mostrarMensaje("Producto registrado correctamente.", "success");
+		await cargarProductos();
+		} catch (error) {
+		mostrarMensaje("No se pudo guardar el producto: " + error.message, "error");
+		}
+		});
+
+		document.getElementById("btnActualizar").addEventListener("click", async () => {
+		if (txtId.value === "") {
+		mostrarMensaje("Selecciona un producto de la tabla para actualizarlo.", "error");
+		return;
+		}
+
+		const producto = validarFormulario();
+		if (!producto) return;
+
+		const id = parseInt(txtId.value, 10);
+		producto.id = id;
+
+		try {
+		const respuesta = await fetch("/api/productos/" + id, {
+		method: "PUT",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(producto)
+		});
+		if (!respuesta.ok) throw new Error(await respuesta.text());
+
+		limpiarFormulario();
+		mostrarMensaje("Producto actualizado correctamente.", "success");
+		await cargarProductos();
+		} catch (error) {
+		mostrarMensaje("No se pudo actualizar el producto: " + error.message, "error");
+		}
+		});
+
+		document.getElementById("btnEliminar").addEventListener("click", () => {
+		if (txtId.value === "") {
+		mostrarMensaje("Selecciona un producto de la tabla para eliminarlo.", "error");
+		return;
+		}
+
+		textoConfirmacion.textContent = "¿Está seguro de que desea eliminar \"" + txtNombre.value + "\" del catálogo del almacén cementero?";
+		modal.style.display = "flex";
+		});
+
+		document.getElementById("btnCancelarEliminar").addEventListener("click", () => {
+		cerrarModal();
+		mostrarMensaje("Eliminación cancelada. El producto no fue modificado.", "success");
+		});
+
+		btnConfirmarEliminar.addEventListener("click", async () => {
+		const id = parseInt(txtId.value, 10);
+		btnConfirmarEliminar.disabled = true;
+
+		try {
+		const respuesta = await fetch("/api/productos/" + id, { method: "DELETE" });
+		if (!respuesta.ok) throw new Error(await respuesta.text());
+
+		cerrarModal();
+		limpiarFormulario();
+		mostrarMensaje("Producto eliminado correctamente.", "success");
+		await cargarProductos();
+		} catch (error) {
+		cerrarModal();
+		mostrarMensaje("No se pudo eliminar el producto: " + error.message, "error");
+		} finally {
+		btnConfirmarEliminar.disabled = false;
+		}
+		});
+
+		document.getElementById("btnLimpiar").addEventListener("click", () => {
+		limpiarFormulario();
+		ocultarMensaje();
+		});
+
+		cargarProductos();
+	</script>
 </body>
 </html>
